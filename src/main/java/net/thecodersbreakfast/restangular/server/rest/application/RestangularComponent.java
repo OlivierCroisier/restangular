@@ -34,5 +34,8 @@ public class RestangularComponent extends Component {
         getClients().add(Protocol.CLAP);
 
         getDefaultHost().attachDefault(new RestangularApplication());
+
+        System.out.println("Server started on port 8000.");
+        System.out.println("Application is now available on http://localhost:8000/web/index.html");
     }
 }
