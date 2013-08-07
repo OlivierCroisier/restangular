@@ -1,4 +1,4 @@
-<h2>Things to do</h2>
+<h2><ng-pluralize count="todosLeft().length" when="{'0':'Nothing left to do !','1':'Only 1 thing left to do !', 'other':'Still {} things to do !'}"></ng-pluralize></h2>
 
 <table class="table table-bordered">
     <tr ng-repeat="todo in todos" ng-class="{active:todo.done}">

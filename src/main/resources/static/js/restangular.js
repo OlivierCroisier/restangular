@@ -27,9 +27,14 @@ app.controller('ListController', ['$scope', 'Todo', '$location', function ($scop
             $location.path("/list");
         });
     };
-    $scope.toggleTodo = function(todo) {
+    $scope.toggleTodo = function (todo) {
         todo.$update(function () {
             $location.path('/list');
+        });
+    };
+    $scope.todosLeft = function () {
+        return $scope.todos.filter(function (t) {
+            return ! t.done;
         });
     };
 }]);
