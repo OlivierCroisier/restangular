@@ -12,3 +12,6 @@
 # binaries
 target
 bin
+
+# Other
+dependency-reduced-pom.xml
