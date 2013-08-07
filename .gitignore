@@ -4,3 +4,11 @@
 *.jar
 *.war
 *.ear
+
+# IntelliJ config files
+*.iml
+.idea
+
+# binaries
+target
+bin
