@@ -1,8 +1,9 @@
 <h2>Things to do</h2>
 
 <table class="table table-bordered">
-    <tr ng-repeat="todo in todos">
+    <tr ng-repeat="todo in todos" ng-class="{active:todo.done}">
         <td>
+            <input type="checkbox" ng-model="todo.done" ng-change="toggleTodo(todo);" style="margin-right: 8px; vertical-align: text-bottom;"/>
             <a ng-href="#!/{{todo.id}}">{{todo.title}}</a>
             <a href="#" ng-click="deleteTodo(todo);" class="btn btn-danger btn-xs pull-right">Delete</a>
             <a ng-href="#!/{{todo.id}}/edit" class="btn btn-primary btn-xs pull-right" style="margin-right:8px;">Edit</a>
