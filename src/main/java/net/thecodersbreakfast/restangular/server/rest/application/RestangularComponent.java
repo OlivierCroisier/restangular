@@ -16,26 +16,23 @@
 
 package net.thecodersbreakfast.restangular.server.rest.application;
 
-import org.restlet.Component;
-import org.restlet.Server;
-import org.restlet.data.Protocol;
+import com.google.common.base.Optional;
+import restx.server.JettyWebServer;
+import restx.server.WebServer;
 
-public class RestangularComponent extends Component {
+public class RestangularComponent {
+
+    // Wondering if this is really needed in our case ... would need @xavierhanin to have a look at it,
+    // I'm sure there is something in restx allowing to not have to define some web.xml to make it work ! :-)
+    public static final String WEB_INF_LOCATION = "src/main/webapp/WEB-INF/web.xml";
+    public static final String WEB_APP_LOCATION = "src/main/webapp/static";
 
     public static void main(String[] args) throws Exception {
-        new RestangularComponent().start();
-    }
-
-    public RestangularComponent() {
-        Server server = new Server(Protocol.HTTP, 8000);
-        getServers().add(server);
-        //server.getContext().getParameters().set("tracing", "true");
-
-        getClients().add(Protocol.CLAP);
-
-        getDefaultHost().attachDefault(new RestangularApplication());
+        int port = Integer.valueOf(Optional.fromNullable(System.getenv("PORT")).or("8000"));
+        WebServer server = new JettyWebServer(WEB_INF_LOCATION, WEB_APP_LOCATION, port, "0.0.0.0");
+        server.startAndAwait();
 
         System.out.println("Server started on port 8000.");
-        System.out.println("Application is now available on http://localhost:8000/web/index.html");
+        System.out.println("Application is now available on http://localhost:8000/index.html");
     }
 }

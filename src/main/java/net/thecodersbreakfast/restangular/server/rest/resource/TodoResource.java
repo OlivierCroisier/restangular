@@ -16,50 +16,54 @@
 
 package net.thecodersbreakfast.restangular.server.rest.resource;
 
+import com.google.common.base.Optional;
 import net.thecodersbreakfast.restangular.server.dao.TodoRepository;
 import net.thecodersbreakfast.restangular.server.model.Todo;
-import org.restlet.data.Status;
-import org.restlet.ext.jackson.JacksonRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
-import org.restlet.resource.Put;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
+import restx.Status;
+import restx.annotations.DELETE;
+import restx.annotations.GET;
+import restx.annotations.PUT;
+import restx.annotations.RestxResource;
+import restx.factory.Component;
+import restx.security.PermitAll;
 
 import java.io.IOException;
 
-public class TodoResource extends ServerResource {
+@Component // Injectable (in tests for instance)
+@RestxResource // Some REST resource (will be useful, later, to generate documentation for REST services)
+@PermitAll // This is just to de-activate security on this resource (ATM, no need to be logged to access this resource)
+public class TodoResource {
 
-    private TodoRepository repository = TodoRepository.getInstance();
+    private TodoRepository repository;
 
-    private Long todoId;
-
-    @Override
-    protected void doInit() throws ResourceException {
-        this.todoId = Long.valueOf(getAttribute("todoId"));
+    // In Restx, injection is made by constructor
+    public TodoResource(TodoRepository repository) {
+        this.repository = repository;
     }
 
-    @Get
-    public Representation get() {
-        Todo todo = repository.get(todoId);
-        if (todo == null) {
-            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
-        }
-        return new JacksonRepresentation<>(todo);
+    @GET("/todos/{todoId}")
+    public Optional<Todo> get(Long todoId) {
+        // Transforming Todo into an optional
+        // If absent, will return a 404, otherwise the Todo will be returned
+        // Note that it would be cooler to have an Optional returned by the TodoRepository
+        // but I didn't want to change TodoRepository contract for the moment
+        return Optional.of(repository.get(todoId));
     }
 
-    @Put("json")
-    public void update(Representation representation) throws IOException {
-        JacksonRepresentation<Todo> jsonRepresentation = new JacksonRepresentation<Todo>(representation, Todo.class);
-        Todo todo = jsonRepresentation.getObject();
+    @PUT("/todos/{todoId}")
+    // Restx doesn't allow void return type (it won't compile if this is the case)
+    // In our case, we'll return the updated Todo
+    public Todo update(Long todoId, Todo todo) throws IOException {
         repository.update(todo);
+        return todo;
     }
 
-    @Delete
-    public void remove() {
+    @DELETE("/todos/{todoId}")
+    // Restx doesn't allow void return type (it won't compile if this is the case)
+    // In our case, we'll return a "deleted" status
+    public Status remove(Long todoId) {
         repository.delete(todoId);
+        return Status.of("deleted");
     }
-
 
 }

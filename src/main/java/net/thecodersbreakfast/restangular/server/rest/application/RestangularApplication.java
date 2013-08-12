@@ -16,32 +16,20 @@
 
 package net.thecodersbreakfast.restangular.server.rest.application;
 
-import net.thecodersbreakfast.restangular.server.rest.resource.TodoListResource;
-import net.thecodersbreakfast.restangular.server.rest.resource.TodoResource;
-import org.restlet.Application;
-import org.restlet.Restlet;
-import org.restlet.resource.Directory;
-import org.restlet.routing.Router;
+import com.google.common.base.Charsets;
+import restx.SignatureKey;
+import restx.factory.Module;
+import restx.factory.Provides;
 
-public class RestangularApplication extends Application {
+@Module
+public class RestangularApplication {
 
     public RestangularApplication() {
-        setName("Restangular");
-        setDescription("RESTlet + AngularJS integration");
-        setOwner("thecodersbreakfast.net");
-        setAuthor("Olivier Croisier");
     }
 
-    @Override
-    public Restlet createInboundRoot() {
-        Directory directory = new Directory(getContext(), "clap://class/static/");
-        directory.setDeeplyAccessible(true);
-
-        Router router = new Router(getContext());
-        router.attach("/web", directory);
-        router.attach("/rest/todos", TodoListResource.class);
-        router.attach("/rest/todos/{todoId}", TodoResource.class);
-        return router;
+    @Provides
+    public SignatureKey signatureKey() {
+         return new SignatureKey("-7000294811607077523 restangular restangular d7dab1c6-4a86-4c01-9fa6-2cj20d9bb9d0".getBytes(Charsets.UTF_8));
     }
 
 }
