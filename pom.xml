@@ -70,6 +70,11 @@
             <artifactId>restx-core-annotation-processor</artifactId>
             <version>${restx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.restx</groupId>
+            <artifactId>restx-server-jetty</artifactId>
+            <version>${restx.version}</version>
+        </dependency>
         <!-- Providing some slf4j implementation -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
