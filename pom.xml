@@ -32,23 +32,43 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.javaVersion>1.7</project.build.javaVersion>
         <!-- Dependencies -->
-        <version.lib.restlet>2.1.2</version.lib.restlet>
+        <!-- Yep, this is a ugly snapshot version, but upcoming auto-compilation feature
+        (a la Play!) is so much useful !.. -->
+        <restx.version>0.2.9-SNAPSHOT</restx.version>
     </properties>
+
+    <!-- ================================================================================ -->
+    <!-- Repositories -->
+    <!-- ================================================================================ -->
+    <!-- Only needed to reference restx snapshot version, once 0.2.9 will be released, this section
+    will be totally useless -->
+    <repositories>
+       <repository>
+         <id>sonatype-snapshots</id>
+         <name>Sonatype snapshots</name>
+         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+         <snapshots>
+           <enabled>true</enabled>
+         </snapshots>
+       </repository>
+     </repositories>
 
     <!-- ================================================================================ -->
     <!-- Dependencies -->
     <!-- ================================================================================ -->
     <dependencies>
 
+        <!-- Note that the pom could be automatically generated with the restx shell
+        see http://restx.io/docs/shell-app-bootstrap.html -->
         <dependency>
-            <groupId>org.restlet.jse</groupId>
-            <artifactId>org.restlet</artifactId>
-            <version>${version.lib.restlet}</version>
+            <groupId>io.restx</groupId>
+            <artifactId>restx-core</artifactId>
+            <version>${restx.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.restlet.jee</groupId>
-            <artifactId>org.restlet.ext.jackson</artifactId>
-            <version>${version.lib.restlet}</version>
+            <groupId>io.restx</groupId>
+            <artifactId>restx-core-annotation-processor</artifactId>
+            <version>${restx.version}</version>
         </dependency>
     </dependencies>
 
