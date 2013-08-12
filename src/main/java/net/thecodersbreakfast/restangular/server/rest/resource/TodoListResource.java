@@ -18,28 +18,37 @@ package net.thecodersbreakfast.restangular.server.rest.resource;
 
 import net.thecodersbreakfast.restangular.server.dao.TodoRepository;
 import net.thecodersbreakfast.restangular.server.model.Todo;
-import org.restlet.ext.jackson.JacksonRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.Post;
-import org.restlet.resource.ServerResource;
+import restx.annotations.GET;
+import restx.annotations.POST;
+import restx.annotations.RestxResource;
+import restx.factory.Component;
+import restx.security.PermitAll;
 
 import java.io.IOException;
+import java.util.List;
 
-public class TodoListResource extends ServerResource {
+@Component // Injectable (in tests for instance)
+@RestxResource // Some REST resource (will be useful, later, to generate documentation for REST services)
+@PermitAll // This is just to de-activate security on this resource (ATM, no need to be logged to access this resource)
+public class TodoListResource {
 
-    private TodoRepository repository = TodoRepository.getInstance();
+    private TodoRepository repository;
 
-    @Get
-    public Representation list() {
-        return new JacksonRepresentation<>(repository.list());
+    // In Restx, injection is made by constructor
+    public TodoListResource(TodoRepository repository) {
+        this.repository = repository;
     }
 
-    @Post("json")
-    public void create(Representation representation) throws IOException {
-        JacksonRepresentation<Todo> jsonRepresentation = new JacksonRepresentation<Todo>(representation, Todo.class);
-        Todo todo = jsonRepresentation.getObject();
+    @GET("/todos")
+    public List<Todo> list() {
+        return repository.list();
+    }
+
+    @POST("/todos")
+    public Todo create(Todo todo) throws IOException {
         repository.create(todo);
+        // Would be useful to return the created Todo, with its id here...
+        return todo;
     }
 
 }
