@@ -18,46 +18,35 @@ package net.thecodersbreakfast.restangular.server.rest.resource;
 
 import net.thecodersbreakfast.restangular.server.dao.TodoRepository;
 import net.thecodersbreakfast.restangular.server.model.Todo;
-import org.restlet.data.Status;
-import org.restlet.ext.jackson.JacksonRepresentation;
-import org.restlet.representation.Representation;
-import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
-import org.restlet.resource.Put;
-import org.restlet.resource.ResourceException;
-import org.restlet.resource.ServerResource;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 
-public class TodoResource extends ServerResource {
+@Path("/rest/todos/{todoId}")
+public class TodoResource {
 
     private TodoRepository repository = TodoRepository.getInstance();
 
-    private Long todoId;
-
-    @Override
-    protected void doInit() throws ResourceException {
-        this.todoId = Long.valueOf(getAttribute("todoId"));
-    }
-
-    @Get
-    public Representation get() {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(@PathParam("todoId") Long todoId) {
         Todo todo = repository.get(todoId);
         if (todo == null) {
-            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
+            return Response.noContent().build();
         }
-        return new JacksonRepresentation<>(todo);
+        return Response.ok(todo).build();
     }
 
-    @Put("json")
-    public void update(Representation representation) throws IOException {
-        JacksonRepresentation<Todo> jsonRepresentation = new JacksonRepresentation<Todo>(representation, Todo.class);
-        Todo todo = jsonRepresentation.getObject();
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void update(Todo todo) throws IOException {
         repository.update(todo);
     }
 
-    @Delete
-    public void remove() {
+    @DELETE
+    public void remove(@PathParam("todoId") Long todoId) {
         repository.delete(todoId);
     }
 
