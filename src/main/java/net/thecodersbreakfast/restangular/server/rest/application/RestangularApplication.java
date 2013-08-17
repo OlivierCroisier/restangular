@@ -16,32 +16,24 @@
 
 package net.thecodersbreakfast.restangular.server.rest.application;
 
+import net.thecodersbreakfast.restangular.server.rest.resource.StaticResource;
 import net.thecodersbreakfast.restangular.server.rest.resource.TodoListResource;
 import net.thecodersbreakfast.restangular.server.rest.resource.TodoResource;
-import org.restlet.Application;
-import org.restlet.Restlet;
-import org.restlet.resource.Directory;
-import org.restlet.routing.Router;
 
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
+
+@ApplicationPath("/")
 public class RestangularApplication extends Application {
 
-    public RestangularApplication() {
-        setName("Restangular");
-        setDescription("RESTlet + AngularJS integration");
-        setOwner("thecodersbreakfast.net");
-        setAuthor("Olivier Croisier");
-    }
-
     @Override
-    public Restlet createInboundRoot() {
-        Directory directory = new Directory(getContext(), "clap://class/static/");
-        directory.setDeeplyAccessible(true);
-
-        Router router = new Router(getContext());
-        router.attach("/web", directory);
-        router.attach("/rest/todos", TodoListResource.class);
-        router.attach("/rest/todos/{todoId}", TodoResource.class);
-        return router;
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> s = new HashSet<>();
+        s.add(TodoListResource.class);
+        s.add(TodoResource.class);
+        s.add(StaticResource.class);
+        return s;
     }
-
 }
