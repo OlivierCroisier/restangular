@@ -40,9 +40,11 @@ public class StaticResource {
             String mimeType = mimeType(file);
             return Response.ok(file, mimeType).build();
         } else {
-            InputStream is = is(path);
-            String mimeType = mimeType(path);
-            return Response.ok(CharStreams.toString(new InputStreamReader(is, Charsets.UTF_8)), mimeType).build();
+            // manage the case when the resource is inside a jar
+            try (InputStream is = is(path)) {
+                String mimeType = mimeType(path);
+                return Response.ok(CharStreams.toString(new InputStreamReader(is, Charsets.UTF_8)), mimeType).build();
+            }
         }
     }
 
